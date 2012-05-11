@@ -35,11 +35,11 @@ Connect style middleware.
 Router documentation: [https://github.com/aaronblohowiak/routes.js](https://github.com/aaronblohowiak/routes.js)  
 ***
 ###Examples: 
-[View the examples](https://github.com/bradleyg/wayward/blob/master/example/app.js)  
+[View the examples](https://github.com/bradleyg/obedient/blob/master/example/app.js)  
 ***
 ###Tests  
 ```
 npm test
 ```  
 
-[![Build Status](https://secure.travis-ci.org/bradleyg/wayward.png)](http://travis-ci.org/bradleyg/obedient)
+[![Build Status](https://secure.travis-ci.org/bradleyg/obedient.png)](http://travis-ci.org/bradleyg/obedient)

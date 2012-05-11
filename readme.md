@@ -1,4 +1,4 @@
-###Obedient - Minimal http framework with nothing.   
+###Obedient - Minimal http framework with nothing but middleware.   
 Install: ```npm install obedient```
 ***
 ###app.get():  

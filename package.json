@@ -1,6 +1,6 @@
 {
   "name": "obedient",
-  "description": "Minimal http framework with the nothing.",
+  "description": "Minimal http framework with the nothing but middleware.",
   "keywords": [
     "router",
     "http",

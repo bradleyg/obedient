@@ -1,0 +1,31 @@
+{
+  "name": "obedient",
+  "description": "Minimal http framework with the nothing.",
+  "keywords": [
+    "router",
+    "http",
+    "framework",
+    "routes"
+  ],
+  "version": "0.0.1",
+  "author": "Bradley Griffiths <bradley.griffiths@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/bradleyg/obedient.git"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "main": "./index.js",
+  "dependencies": {
+    "routes": "https://github.com/bradleyg/routes.js/tarball/master"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*",
+    "request": "*"
+  },
+  "engines": {
+    "node": ">= 0.6.0"
+  }
+}

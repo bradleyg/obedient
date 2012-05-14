@@ -1,5 +1,6 @@
 var http = require('http')
 var router = require('routes').Router()
+var url = require('url')
 var middleware = []
 
 var methods = {
@@ -11,13 +12,16 @@ var methods = {
 }
 
 var handle = function(req, res) {
-  var match = router.match('/' + req.method + req.url)
+  var parts = url.parse(req.url, true)
+  var match = router.match('/' + req.method + parts.pathname)
+  
   if( ! match) {
     res.statusCode = 404
     res.setHeader("Content-Type", "text/plain");
     return res.end('404, Not found')
   }
   req.params = match.params
+  req.query = parts.query
   
   var tmp = res.writeHead
   res.writeHead = function(){

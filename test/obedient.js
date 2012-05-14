@@ -5,42 +5,31 @@ var path = require('path')
 
 // methods
 
+var methods = {
+  'get': 'GET',
+  'post': 'POST', 
+  'put': 'PUT', 
+  'del': 'DELETE'
+}
+
 app.use(function(req, res, next){
   req.params.middleware = true
   next()
 })
 
-app.get('/test/:param1/:param2?', function(req, res){
-  res.setHeader("Content-Type", "application/json");
-  res.emit('header')
-  res.end(JSON.stringify(req.params))
-})
-
-app.post('/test/:param1/:param2?', function(req, res){
-  res.setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify(req.params))
-})
-
-app.put('/test/:param1/:param2?', function(req, res){
-  res.setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify(req.params))
-})
-
-app.del('/test/:param1/:param2?', function(req, res){
-  res.setHeader("Content-Type", "application/json");
-  res.end(JSON.stringify(req.params))
+Object.keys(methods).forEach(function(i){
+  app[i]('/test/:param1/:param2?', function(req, res){
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({
+      params: req.params,
+      query: req.query
+    }))
+  })
 })
 
 app.listen(3000)
 
 // tests
-
-var methods = {
-  'get': 'GET', 
-  'post': 'POST', 
-  'put': 'PUT', 
-  'del': 'DELETE'
-}
 
 describe("obedient", function () {
   
@@ -87,7 +76,18 @@ describe("obedient", function () {
           should.exist(res)
           res.statusCode.should.equal(200)
           res.headers['content-type'].should.equal('application/json')
-          body.should.equal('{"param1":"exists","param2":"exists","middleware":true}')
+          body.should.equal('{"params":{"param1":"exists","param2":"exists","middleware":true},"query":{}}')
+          done()
+        })      
+      })
+      
+      it('should return query params in req.query', function(done){
+        request({url: 'http://localhost:3000/test/exists/exists?query=true', method: methods[method]}, function(err, res, body){
+          should.not.exist(err)
+          should.exist(res)
+          res.statusCode.should.equal(200)
+          res.headers['content-type'].should.equal('application/json')
+          body.should.equal('{"params":{"param1":"exists","param2":"exists","middleware":true},"query":{"query":"true"}}')
           done()
         })      
       })

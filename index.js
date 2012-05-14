@@ -18,6 +18,13 @@ var handle = function(req, res) {
     return res.end('404, Not found')
   }
   req.params = match.params
+  
+  var tmp = res.writeHead
+  res.writeHead = function(){
+    this.emit('header')
+    return tmp.apply(this, arguments)
+  }
+  
   if(middleware.length === 0) return match.fn(req, res)
   middle(req, res, match.fn, 1)
 }

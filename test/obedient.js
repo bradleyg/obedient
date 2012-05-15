@@ -3,14 +3,9 @@ var request = require('request')
 var should = require('should')
 var path = require('path')
 
-// methods
+// setup
 
-var methods = {
-  'get': 'GET',
-  'post': 'POST', 
-  'put': 'PUT', 
-  'del': 'DELETE'
-}
+var methods = ['GET', 'POST', 'PUT', 'DELETE']
 
 app.use(function(req, res, next){
   req.middleware = true
@@ -22,8 +17,8 @@ app.use(function(req, res, next){
   next()
 })
 
-Object.keys(methods).forEach(function(i){
-  app[i]('/test/:param1/:param2?', function(req, res){
+methods.forEach(function(method){
+  app[method.toLowerCase()]('/test/:param1/:param2?', function(req, res){
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({
       params: req.params,
@@ -40,12 +35,12 @@ app.listen(3000)
 
 describe("obedient", function () {
   
-  Object.keys(methods).forEach(function(method){
+  methods.forEach(function(method){
   
-    describe('app.' + method + '()', function(){
+    describe('app.' + method.toLowerCase() + '()', function(){
       
       it('should return an error for a route that is too short', function(done){
-        request({url: 'http://localhost:3000/test', method: methods[method]}, function(err, res, body){
+        request({url: 'http://localhost:3000/test', method: method}, function(err, res, body){
           should.not.exist(err)
           should.exist(res)
           res.statusCode.should.equal(404)
@@ -56,7 +51,7 @@ describe("obedient", function () {
       })
       
       it('should return an error for a route that it too long', function(done){
-        request({url: 'http://localhost:3000/test/exists/nonvalid/nonvalid', method: methods[method]}, function(err, res, body){
+        request({url: 'http://localhost:3000/test/exists/nonvalid/nonvalid', method: method}, function(err, res, body){
           should.not.exist(err)
           should.exist(res)
           res.statusCode.should.equal(404)
@@ -70,15 +65,15 @@ describe("obedient", function () {
         request({url: 'http://localhost:3000/test/exists', method: 'TRACE'}, function(err, res, body){
           should.not.exist(err)
           should.exist(res)
-          res.statusCode.should.equal(404)
+          res.statusCode.should.equal(405)
           res.headers['content-type'].should.equal('text/plain')
-          body.should.equal('404, Not found')
+          body.should.equal('405, Method not allowed')
           done()
         })      
       })
       
       it('should not return an error for a route that exist + middleware set', function(done){
-        request({url: 'http://localhost:3000/test/exists/exists', method: methods[method]}, function(err, res, body){
+        request({url: 'http://localhost:3000/test/exists/exists', method: method}, function(err, res, body){
           should.not.exist(err)
           should.exist(res)
           res.statusCode.should.equal(200)
@@ -89,7 +84,7 @@ describe("obedient", function () {
       })
       
       it('should return query params in req.query', function(done){
-        request({url: 'http://localhost:3000/test/exists/exists?query=true', method: methods[method]}, function(err, res, body){
+        request({url: 'http://localhost:3000/test/exists/exists?query=true', method: method}, function(err, res, body){
           should.not.exist(err)
           should.exist(res)
           res.statusCode.should.equal(200)

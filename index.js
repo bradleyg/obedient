@@ -3,12 +3,11 @@ var router = require('routes').Router()
 var url = require('url')
 var middleware = []
 
-var methods = {
-  'head': 'HEAD',
-  'get': 'GET', 
-  'post': 'POST', 
-  'put': 'PUT', 
-  'del': 'DELETE'
+var methods = ['HEAD', 'GET', 'POST', 'PUT', 'DELETE']
+
+var handle = function(req, res) {
+  if(middleware.length === 0) return complete(req, res)
+  middle(req, res, complete, 1)  
 }
 
 var middle = function(req, res, complete, count){
@@ -24,13 +23,11 @@ var middle = function(req, res, complete, count){
 
 var complete = function(req, res) {
   var parts = url.parse(req.url, true)
-  var match = router.match('/' + req.method.toUpperCase() + parts.pathname)
+  var route = parts.pathname
+  var match = router.match('/' + req.method.toUpperCase() + route)
 
-  if( ! match) {
-    res.statusCode = 404
-    res.setHeader("Content-Type", "text/plain");
-    return res.end('404, Not found')
-  }
+  if( ! match) return sendError(res, route)
+
   req.params = match.params
   req.query = parts.query
 
@@ -43,14 +40,24 @@ var complete = function(req, res) {
   match.fn(req, res)
 }
 
-var handle = function(req, res) {
-  if(middleware.length === 0) return complete(req, res)
-  middle(req, res, complete, 1)  
+var sendError = function(res, route) {
+  var code = checkRoutes(route) ? 405 : 404
+  var error = (code === 405) ? 'Method not allowed' : 'Not found'
+
+  res.statusCode = code
+  res.setHeader("Content-Type", "text/plain")
+  res.end(code + ', ' + error)  
 }
 
-Object.keys(methods).forEach(function(method){
-  module.exports[method] = function(route, cb) {
-    router.addRoute('/' + methods[method] + route, cb)  
+var checkRoutes = function(route) {
+  return methods.some(function(method){
+    return router.match('/' + method.toUpperCase() + route)
+  })
+}
+
+methods.forEach(function(method){
+  module.exports[method.toLowerCase()] = function(route, cb) {
+    router.addRoute('/' + method + route, cb)  
   }
 })
 

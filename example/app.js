@@ -1,7 +1,7 @@
 var app = require('../index.js')
 
 app.use(function(req, res, next){
-  req.params.middleware = true
+  console.log("middleware")
   next()
 })
 

@@ -17,13 +17,19 @@ app.use(function(req, res, next){
   next()
 })
 
+app.use(function(req, res, next){
+  req.middleware2 = true
+  next()
+})
+
 Object.keys(methods).forEach(function(i){
   app[i]('/test/:param1/:param2?', function(req, res){
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({
       params: req.params,
       query: req.query,
-      middleware: req.middleware
+      middleware: req.middleware,
+      middleware2: req.middleware2
     }))
   })
 })
@@ -77,7 +83,7 @@ describe("obedient", function () {
           should.exist(res)
           res.statusCode.should.equal(200)
           res.headers['content-type'].should.equal('application/json')
-          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{},"middleware":true}')
+          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{},"middleware":true,"middleware2":true}')
           done()
         })      
       })
@@ -88,7 +94,7 @@ describe("obedient", function () {
           should.exist(res)
           res.statusCode.should.equal(200)
           res.headers['content-type'].should.equal('application/json')
-          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{"query":"true"},"middleware":true}')
+          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{"query":"true"},"middleware":true,"middleware2":true}')
           done()
         })      
       })

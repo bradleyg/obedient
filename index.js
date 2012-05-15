@@ -11,18 +11,14 @@ var methods = {
   'del': 'DELETE'
 }
 
-var handle = function(req, res) {  
-  if(middleware.length !== 0) {
-    return middle(req, res, complete, 1)
-  } 
-  complete(req, res)
-}
-
 var middle = function(req, res, complete, count){
-  middleware[middleware.length - count](req, res, function(){
-    count++
-    var cb = middleware[middleware.length - count] ? middle : complete
-    cb(req, res, complete, count)
+  var next = middleware[middleware.length - count]
+  var more = middleware[middleware.length - count - 1]
+  count++
+
+  next(req, res, function(){
+    if( ! more) return complete(req, res)
+    middle(req, res, complete, count)
   })
 }
 
@@ -47,13 +43,9 @@ var complete = function(req, res) {
   match.fn(req, res)
 }
 
-module.exports.use = function(middle) {
-  if(typeof middle !== 'function') throw new Error('Supplied middle ware is not a function')
-  middleware.unshift(middle)
-}
-
-module.exports.listen = function(port){
-  http.createServer(handle).listen(port)
+var handle = function(req, res) {
+  if(middleware.length === 0) return complete(req, res)
+  middle(req, res, complete, 1)  
 }
 
 Object.keys(methods).forEach(function(method){
@@ -61,3 +53,14 @@ Object.keys(methods).forEach(function(method){
     router.addRoute('/' + methods[method] + route, cb)  
   }
 })
+
+module.exports.use = function(middle) {
+  if(typeof middle !== 'function') {
+    throw new Error('Supplied middle ware is not a function')
+  }
+  middleware.unshift(middle)
+}
+
+module.exports.listen = function(port){
+  http.createServer(handle).listen(port)
+}

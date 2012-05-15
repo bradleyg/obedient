@@ -16,9 +16,9 @@ Connect style routing for __POST__ http methods. Missing routes will throw a 404
 app.put(route, callback)
 ```
 Connect style routing for __PUT__ http methods. Missing routes will throw a 404.  
-###app.del():  
+###app.delete():  
 ```javascript
-app.del(route, callback)
+app.delete(route, callback)
 ```
 Connect style routing for __DELETE__ http methods. Missing routes will throw a 404.  
 ###app.listen():  

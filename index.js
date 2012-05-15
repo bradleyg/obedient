@@ -24,7 +24,7 @@ var middle = function(req, res, complete, count){
 
 var complete = function(req, res) {
   var parts = url.parse(req.url, true)
-  var match = router.match('/' + req.method + parts.pathname)
+  var match = router.match('/' + req.method.toUpperCase() + parts.pathname)
 
   if( ! match) {
     res.statusCode = 404

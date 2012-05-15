@@ -11,10 +11,25 @@ var methods = {
   'del': 'DELETE'
 }
 
-var handle = function(req, res) {
+var handle = function(req, res) {  
+  if(middleware.length !== 0) {
+    return middle(req, res, complete, 1)
+  } 
+  complete(req, res)
+}
+
+var middle = function(req, res, complete, count){
+  middleware[middleware.length - count](req, res, function(){
+    count++
+    var cb = middleware[middleware.length - count] ? middle : complete
+    cb(req, res, complete, count)
+  })
+}
+
+var complete = function(req, res) {
   var parts = url.parse(req.url, true)
   var match = router.match('/' + req.method + parts.pathname)
-  
+
   if( ! match) {
     res.statusCode = 404
     res.setHeader("Content-Type", "text/plain");
@@ -22,23 +37,14 @@ var handle = function(req, res) {
   }
   req.params = match.params
   req.query = parts.query
-  
+
   var tmp = res.writeHead
   res.writeHead = function(){
     this.emit('header')
     return tmp.apply(this, arguments)
   }
-  
-  if(middleware.length === 0) return match.fn(req, res)
-  middle(req, res, match.fn, 1)
-}
 
-var middle = function(req, res, done, count){
-  middleware[middleware.length - count](req, res, function(){
-    count++
-    var cb = middleware[middleware.length - count] ? middle : done
-    cb(req, res, done, count)
-  })
+  match.fn(req, res)
 }
 
 module.exports.use = function(middle) {

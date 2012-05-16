@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Obedient by bradleyg</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Obedient</h1>
+        <p>Minimal http framework with nothing but middleware.</p>
+        <p class="view"><a href="https://github.com/bradleyg/obedient">View the Project on GitHub <small>bradleyg/obedient</small></a></p>
+        <ul>
+          <li><a href="https://github.com/bradleyg/obedient/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/bradleyg/obedient/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/bradleyg/obedient">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>Obedient - Minimal http framework with nothing but middleware.</h3>
+
+<p>Install: <code>npm install obedient</code></p>
+
+<hr><h3>app.get():</h3>
+
+<div class="highlight">
+<pre><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">route</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Connect style routing for <strong>GET</strong> http methods. Missing routes will throw a 404.  </p>
+
+<h3>app.post():</h3>
+
+<div class="highlight">
+<pre><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">route</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Connect style routing for <strong>POST</strong> http methods. Missing routes will throw a 404.  </p>
+
+<h3>app.put():</h3>
+
+<div class="highlight">
+<pre><span class="nx">app</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">route</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Connect style routing for <strong>PUT</strong> http methods. Missing routes will throw a 404.  </p>
+
+<h3>app.delete():</h3>
+
+<div class="highlight">
+<pre><span class="nx">app</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="nx">route</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Connect style routing for <strong>DELETE</strong> http methods. Missing routes will throw a 404.  </p>
+
+<h3>app.listen():</h3>
+
+<div class="highlight">
+<pre><span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">port</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Port for server to listen on.</p>
+
+<h3>app.use():</h3>
+
+<div class="highlight">
+<pre><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">route</span><span class="p">,</span> <span class="nx">middleware</span><span class="p">)</span>
+</pre>
+</div>
+
+
+<p>Connect style middleware. <code>route</code> is an optional field. If set, the middleware will be mounted at that particular route and the prefix will be ignored. So <strong><em>/public/example.js</em></strong> would be treated as <strong><em>/example.js</em></strong> and the middleware would only be run if URL started with <strong><em>/public</em></strong>.  </p>
+
+<h3>Deps:</h3>
+
+<p>Router documentation: <a href="https://github.com/aaronblohowiak/routes.js">https://github.com/aaronblohowiak/routes.js</a>  </p>
+
+<hr><h3>Examples:</h3>
+
+<p><a href="https://github.com/bradleyg/obedient/blob/master/example/app.js">View the examples</a>  </p>
+
+<hr><h3>Tests</h3>
+
+<pre><code>npm test
+</code></pre>
+
+<p><a href="http://travis-ci.org/bradleyg/obedient"><img src="https://secure.travis-ci.org/bradleyg/obedient.png" alt="Build Status"></a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/bradleyg">bradleyg</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>

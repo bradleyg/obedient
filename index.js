@@ -14,11 +14,16 @@ var middle = function(req, res, complete, count){
   var next = middleware[middleware.length - count]
   var more = middleware[middleware.length - count - 1]
   count++
-
-  next(req, res, function(){
-    if( ! more) return complete(req, res)
-    middle(req, res, complete, count)
-  })
+  
+  var match = ( ! next['path'] || req.url.indexOf(next['path']) === 0)
+  
+  var checkMore = function() {
+    if(more) middle(req, res, complete, count)
+    else complete(req, res)
+  }
+  
+  if(match) next['fn'](req, res, checkMore) 
+  else checkMore()
 }
 
 var complete = function(req, res) {
@@ -61,11 +66,15 @@ methods.forEach(function(method){
   }
 })
 
-module.exports.use = function(middle) {
-  if(typeof middle !== 'function') {
-    throw new Error('Supplied middle ware is not a function')
+module.exports.use = function(path, fn) {
+  if(typeof path === 'function') {
+    fn = path
+    path = null
   }
-  middleware.unshift(middle)
+  else if(typeof path !== 'string' || typeof fn !== 'function') {
+    throw new Error('supplied path+middleware is not a string+function')
+  }
+  middleware.unshift({path: path, fn: fn})
 }
 
 module.exports.listen = function(port){

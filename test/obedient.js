@@ -12,8 +12,12 @@ app.use(function(req, res, next){
   next()
 })
 
-app.use(function(req, res, next){
-  req.middleware2 = true
+app.use('/middle', function(req, res, next){
+  res.end('middle')
+})
+
+app.use('/nonMatch', function(req, res, next){
+  req.nonMatch = true
   next()
 })
 
@@ -24,7 +28,7 @@ methods.forEach(function(method){
       params: req.params,
       query: req.query,
       middleware: req.middleware,
-      middleware2: req.middleware2
+      nonMatch: req.nonMatch
     }))
   })
 })
@@ -39,6 +43,16 @@ describe("obedient", function () {
   
     describe('app.' + method.toLowerCase() + '()', function(){
       
+      it('should only return middleware for a particular route', function(done){
+        request({url: 'http://localhost:3000/middle', method: method}, function(err, res, body){
+          should.not.exist(err)
+          should.exist(res)
+          res.statusCode.should.equal(200)
+          body.should.equal('middle')
+          done()
+        })      
+      })
+
       it('should return an error for a route that is too short', function(done){
         request({url: 'http://localhost:3000/test', method: method}, function(err, res, body){
           should.not.exist(err)
@@ -78,7 +92,7 @@ describe("obedient", function () {
           should.exist(res)
           res.statusCode.should.equal(200)
           res.headers['content-type'].should.equal('application/json')
-          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{},"middleware":true,"middleware2":true}')
+          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{},"middleware":true}')
           done()
         })      
       })
@@ -89,7 +103,7 @@ describe("obedient", function () {
           should.exist(res)
           res.statusCode.should.equal(200)
           res.headers['content-type'].should.equal('application/json')
-          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{"query":"true"},"middleware":true,"middleware2":true}')
+          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{"query":"true"},"middleware":true}')
           done()
         })      
       })

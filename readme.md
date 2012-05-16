@@ -28,9 +28,9 @@ app.listen(port)
 Port for server to listen on.
 ###app.use():  
 ```javascript
-app.use(middleware)
+app.use(route, middleware)
 ```
-Connect style middleware.  
+Connect style middleware. ```route``` is an optional field. If set the middleware will only run for that partial route. ___/public___ would match all routes starting with that route. eg. ___/public/example.js___.
 ###Deps:
 Router documentation: [https://github.com/aaronblohowiak/routes.js](https://github.com/aaronblohowiak/routes.js)  
 ***

@@ -44,7 +44,7 @@ describe("obedient", function () {
     describe('app.' + method.toLowerCase() + '()', function(){
       
       it('should only return middleware for a particular route', function(done){
-        request({url: 'http://localhost:3000/middle', method: method}, function(err, res, body){
+        request({url: 'http://localhost:3000/middle/mounted', method: method}, function(err, res, body){
           should.not.exist(err)
           should.exist(res)
           res.statusCode.should.equal(200)

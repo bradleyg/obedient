@@ -15,7 +15,10 @@ var middle = function(req, res, complete, count){
   var more = middleware[middleware.length - count - 1]
   count++
   
-  var match = ( ! next['path'] || req.url.indexOf(next['path']) === 0)
+  var mount = (req.url.indexOf(next['path']) === 0)
+  var match = ( ! next['path'] || mount)
+  
+  if(mount) req.url = req.url.replace(next['path'], '')
   
   var checkMore = function() {
     if(more) middle(req, res, complete, count)

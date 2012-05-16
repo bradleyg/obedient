@@ -30,7 +30,7 @@ Port for server to listen on.
 ```javascript
 app.use(route, middleware)
 ```
-Connect style middleware. ```route``` is an optional field. If set the middleware will only run for that partial route. ___/public___ would match all routes starting with that route. eg. ___/public/example.js___.
+Connect style middleware. ```route``` is an optional field. If set, the middleware will be mounted at that particular route and the prefix will be ignored. So ___/public/example.js___ would be treated as ___/example.js___ and the middleware would only be run if URL started with ___/public___.  
 ###Deps:
 Router documentation: [https://github.com/aaronblohowiak/routes.js](https://github.com/aaronblohowiak/routes.js)  
 ***

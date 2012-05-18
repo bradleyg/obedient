@@ -65,7 +65,8 @@ var checkRoutes = function(route) {
 
 methods.forEach(function(method){
   module.exports[method.toLowerCase()] = function(route, cb) {
-    router.addRoute('/' + method + route, cb)  
+    router.addRoute('/' + method + route, cb)
+    return this
   }
 })
 
@@ -78,8 +79,10 @@ module.exports.use = function(path, fn) {
     throw new Error('supplied path+middleware is not a string+function')
   }
   middleware.unshift({path: path, fn: fn})
+  return this
 }
 
 module.exports.listen = function(port){
   http.createServer(handle).listen(port)
+  return this
 }

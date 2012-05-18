@@ -7,19 +7,18 @@ var path = require('path')
 
 var methods = ['GET', 'POST', 'PUT', 'DELETE']
 
-app.use(function(req, res, next){
-  req.middleware = true
-  next()
-})
-
-app.use('/middle', function(req, res, next){
-  res.end('middle')
-})
-
-app.use('/nonMatch', function(req, res, next){
-  req.nonMatch = true
-  next()
-})
+app
+  .use(function(req, res, next){
+    req.middleware = true
+    next()
+  })
+  .use('/middle', function(req, res, next){
+    res.end('middle')
+  })
+  .use('/nonMatch', function(req, res, next){
+    req.nonMatch = true
+    next()
+  })
 
 methods.forEach(function(method){
   app[method.toLowerCase()]('/test/:param1/:param2?', function(req, res){

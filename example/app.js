@@ -15,11 +15,11 @@ app.get('/test/:param?', function(req, res){
 })
 
 app.post('/test/:param?', function(req, res){
-  res.end(JSON.stringify(req.params))
+  res.end(JSON.stringify(req.body))
 })
 
 app.put('/test/:param?', function(req, res){
-  res.end(JSON.stringify(req.params))
+  res.end(JSON.stringify(req.body))
 })
 
 app.delete('/test/:param?', function(req, res){

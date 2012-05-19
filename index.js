@@ -1,13 +1,20 @@
 var http = require('http')
-var router = require('routes').Router()
+var qs = require('querystring')
 var url = require('url')
+var router = require('routes').Router()
 var middleware = []
 
 var methods = ['HEAD', 'GET', 'POST', 'PUT', 'DELETE']
 
+var errors = {
+  400: 'Bad request',
+  404: 'Not found',
+  405: 'Method not allowed'
+}
+
 var handle = function(req, res) {
   if(middleware.length === 0) return complete(req, res)
-  middle(req, res, complete, 1)  
+  middle(req, res, complete, 1)
 }
 
 var middle = function(req, res, complete, count){
@@ -34,27 +41,48 @@ var complete = function(req, res) {
   var route = parts.pathname
   var match = router.match('/' + req.method.toUpperCase() + route)
 
-  if( ! match) return sendError(res, route)
-
-  req.params = match.params
-  req.query = parts.query
-
-  var tmp = res.writeHead
-  res.writeHead = function(){
-    this.emit('header')
-    return tmp.apply(this, arguments)
+  if( ! match) {
+    var code = checkRoutes(route) ? 405 : 404
+    return sendError(res, code)
   }
-
-  match.fn(req, res)
+  
+  parseBody(req, res, function(err){
+    if(err) return sendError(res, 400)
+  
+    req.params = match.params
+    req.query = parts.query
+  
+    var tmp = res.writeHead
+    res.writeHead = function(){
+      this.emit('header')
+      return tmp.apply(this, arguments)
+    }
+  
+    match.fn(req, res)
+  })
 }
 
-var sendError = function(res, route) {
-  var code = checkRoutes(route) ? 405 : 404
-  var error = (code === 405) ? 'Method not allowed' : 'Not found'
-
+var sendError = function(res, code) {
   res.statusCode = code
   res.setHeader("Content-Type", "text/plain")
-  res.end(code + ', ' + error)  
+  res.end(code + ', ' + errors[code])  
+}
+
+var parseBody = function(req, res, cb) {
+  var body = ''
+  
+  req.on('data', function(chunk) {
+    body += chunk
+  })
+
+  req.on('end', function() {
+    req.body = qs.parse(body)
+    cb(null)
+  })
+
+  req.on('error', function(err){
+    cb(err)
+  })
 }
 
 var checkRoutes = function(route) {

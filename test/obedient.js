@@ -27,7 +27,8 @@ methods.forEach(function(method){
       params: req.params,
       query: req.query,
       middleware: req.middleware,
-      nonMatch: req.nonMatch
+      nonMatch: req.nonMatch,
+      body: req.body
     }))
   })
 })
@@ -41,6 +42,18 @@ describe("obedient", function () {
   methods.forEach(function(method){
   
     describe('app.' + method.toLowerCase() + '()', function(){
+      
+      if(method === 'POST' || method === 'PUT') {
+        it('should return ' + method + ' data', function(done){
+          request({url: 'http://localhost:3000/test/exists/exists', method: method, body: 'key=value'}, function(err, res, body){
+            should.not.exist(err)
+            should.exist(res)
+            body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{},"middleware":true,"body":{"key":"value"}}')
+            res.statusCode.should.equal(200)
+            done()
+          })      
+        })
+      }
       
       it('should only return middleware for a particular route', function(done){
         request({url: 'http://localhost:3000/middle/mounted', method: method}, function(err, res, body){
@@ -91,7 +104,7 @@ describe("obedient", function () {
           should.exist(res)
           res.statusCode.should.equal(200)
           res.headers['content-type'].should.equal('application/json')
-          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{},"middleware":true}')
+          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{},"middleware":true,"body":{}}')
           done()
         })      
       })
@@ -102,7 +115,7 @@ describe("obedient", function () {
           should.exist(res)
           res.statusCode.should.equal(200)
           res.headers['content-type'].should.equal('application/json')
-          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{"query":"true"},"middleware":true}')
+          body.should.equal('{"params":{"param1":"exists","param2":"exists"},"query":{"query":"true"},"middleware":true,"body":{}}')
           done()
         })      
       })
